@@ -39,7 +39,7 @@ export const app = defineApp({
     webhookSecret: {
       name: "Webhook Secret",
       description:
-        "Optional secret for webhook verification (used to validate incoming webhook requests)",
+        "Optional secret for webhook verification (used to validate incoming webhook requests). The secret will only be verified if you provide it.",
       type: "string",
       required: false,
       sensitive: true,

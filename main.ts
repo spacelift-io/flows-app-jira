@@ -6,6 +6,7 @@ import {
 } from "@slflows/sdk/v1";
 import { blocks } from "./blocks/index";
 import { createJiraClient } from "./utils/jiraClient";
+import { validatePayloadAgainstBlockConfig } from "./utils/webhookFilters";
 
 export const app = defineApp({
   name: "Jira Integration",
@@ -176,7 +177,10 @@ export const app = defineApp({
           );
         } else {
           const listOutput = await blocksApi.list({ typeIds: [typeId] });
-          const blockIds = listOutput.blocks.map((block) => block.id);
+          const filteredBlocks = listOutput.blocks.filter((block) => {
+            return validatePayloadAgainstBlockConfig(messageBody, block.config);
+          });
+          const blockIds = filteredBlocks.map((block) => block.id);
 
           if (blockIds.length > 0) {
             await messaging.sendToBlocks({
